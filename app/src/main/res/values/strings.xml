@@ -5,6 +5,7 @@
     <string name="addr_one">Enter Address 1</string>
     <string name="addr_two">Enter Address 2</string>
     <string name="button_enter">Continue</string>
+    <string name="title">Meet Me Halfway</string>
     <string-array name="radius_array">
         <item>Choose Radius</item>
         <item>5</item>
