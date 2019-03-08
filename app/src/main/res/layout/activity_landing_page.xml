@@ -76,14 +76,16 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="8dp"
-        android:background="#F4F4F6"
+        android:background="#3ACCE1"
         android:text="@string/button_enter"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/RadiusSpinner" />
+        app:layout_constraintTop_toBottomOf="@+id/radius_spinner" />
 
     <Spinner
-        android:id="@+id/RadiusSpinner"
+        android:id="@+id/radius_spinner"
         android:layout_width="292dp"
         android:layout_height="51dp"
         android:layout_marginStart="8dp"
@@ -97,5 +99,23 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/AddressTwo" />
+
+    <TextView
+        android:id="@+id/app_name"
+        android:layout_width="312dp"
+        android:layout_height="76dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="#3ACCE1"
+        android:text="Meet Me Halfway"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="@+id/appBarLayout3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
