@@ -2,4 +2,15 @@
     <string name="app_name">Meet Me Halfway</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_landing_page">LandingPage</string>
+    <string name="addr_one">Enter Address 1</string>
+    <string name="addr_two">Enter Address 2</string>
+    <string name="button_enter">Continue</string>
+    <string-array name="radius_array">
+        <item>Choose Radius</item>
+        <item>5</item>
+        <item>10</item>
+        <item>25</item>
+        <item>50</item>
+        <item>100</item>
+    </string-array>
 </resources>
