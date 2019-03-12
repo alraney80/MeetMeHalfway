@@ -8,6 +8,47 @@
     tools:context=".LandingPage"
     android:id="@+id/coordinatorLayout">
 
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="8dp"
+        android:background="@color/colorTeal"
+        android:lineSpacingExtra="8sp"
+        android:paddingStart="48dp"
+        android:paddingLeft="48dp"
+        android:paddingTop="24dp"
+        android:paddingEnd="48dp"
+        android:paddingRight="48dp"
+        android:paddingBottom="24dp"
+        android:text="@string/app_name"
+        android:textAlignment="center"
+        android:textColor="@color/colorWhite"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/AddressOne"
+        android:layout_width="339dp"
+        android:layout_height="52dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="8dp"
+        android:autofillHints=""
+        android:background="#F4F4F6"
+        android:ems="10"
+        android:hint="@string/addr_one"
+        android:inputType="textPostalAddress"
+        android:paddingStart="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title" />
+
     <EditText
         android:id="@+id/AddressTwo"
         android:layout_width="339dp"
@@ -15,55 +56,15 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="8dp"
-        android:background="#F4F4F6"
-        android:ems="10"
-        android:inputType="textPostalAddress"
-        android:paddingStart="8dp"
-        android:text="@string/addr_two"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/AddressOne"
-        android:autofillHints="" />
-
-    <include
-        layout="@layout/content_landing_page"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        tools:layout_conversion_absoluteHeight="581dp"
-        tools:layout_conversion_absoluteWidth="411dp"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp" />
-
-    <EditText
-        android:id="@+id/AddressOne"
-        android:layout_width="339dp"
-        android:layout_height="52dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
         android:autofillHints=""
         android:background="#F4F4F6"
         android:ems="10"
+        android:hint="@string/addr_two"
         android:inputType="textPostalAddress"
         android:paddingStart="8dp"
-        android:text="@string/addr_one"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="182dp" />
-
-    <Button
-        android:id="@+id/enterButton"
-        android:layout_width="181dp"
-        android:layout_height="41dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="8dp"
-        android:background="#3ACCE1"
-        android:text="@string/button_enter"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/radius_spinner" />
+        app:layout_constraintTop_toBottomOf="@+id/AddressOne" />
 
     <Spinner
         android:id="@+id/radius_spinner"
@@ -80,5 +81,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/AddressTwo" />
+
+    <Button
+        android:id="@+id/enterButton"
+        android:layout_width="181dp"
+        android:layout_height="41dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="8dp"
+        android:background="#3ACCE1"
+        android:text="@string/button_enter"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radius_spinner" />
 
 </android.support.constraint.ConstraintLayout>
