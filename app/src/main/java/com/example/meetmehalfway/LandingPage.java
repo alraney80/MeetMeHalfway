@@ -19,6 +19,7 @@ public class LandingPage extends AppCompatActivity {
 
     private Button enterButton;
     private static final String TAG = "YOUR-TAG-NAME";
+    private String placeAPIKey = BuildConfig.PlaceAPIKey;
 
 
 
@@ -33,7 +34,7 @@ public class LandingPage extends AppCompatActivity {
          * environment we recommend using a secure mechanism to manage API keys.
          */
         if (!Places.isInitialized()) {
-            Places.initialize(getApplicationContext(),"AIzaSyCi9m_BV4MA1CdH5kU7qUvqQ_mQrpB9L5U");
+            Places.initialize(getApplicationContext(), placeAPIKey);
         }
 
         // Initialize the AutocompleteSupportFragment.

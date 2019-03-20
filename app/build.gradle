@@ -11,9 +11,15 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
+        debug {
+            buildConfigField 'String', "PlaceAPIKey", MeetMeHalfway_PlacesAPIKey
+            resValue 'string', "place_api_key", MeetMeHalfway_PlacesAPIKey
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField 'String', "PlaceAPIKey", MeetMeHalfway_PlacesAPIKey
+            resValue 'string', "place_api_key", MeetMeHalfway_PlacesAPIKey
         }
     }
 }
