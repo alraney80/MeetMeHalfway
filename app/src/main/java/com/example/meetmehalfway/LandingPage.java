@@ -20,14 +20,17 @@ public class LandingPage extends AppCompatActivity {
     private Button enterButton;
     //private static final String TAG = "YOUR-TAG-NAME";
     private String placeAPIKey = BuildConfig.PlaceAPIKey;
+    private TextView addr1Result;
+    private TextView addr2Result;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing_page);
-        final TextView addr1Result = findViewById(R.id.AddrOneResult);
-        final TextView addr2Result = findViewById(R.id.AddrTwoResult);
+
+        addr1Result = this.findViewById(R.id.AddrOneResult);
+        addr2Result = this.findViewById(R.id.AddrTwoResult);
 
         /*
          * Initialize Places.
@@ -46,7 +49,7 @@ public class LandingPage extends AppCompatActivity {
             @Override
             public void onPlaceSelected(Place place) {
                 // TODO: Get info about the selected place.
-                addr1Result.setText(place.getName());
+                addr1Result.setText(String.format(place.getName(),place.getAddress()));
             }
 
             @Override
