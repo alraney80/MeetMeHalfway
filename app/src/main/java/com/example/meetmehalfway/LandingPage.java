@@ -30,14 +30,13 @@ public class LandingPage extends AppCompatActivity {
         final TextView addr2Result = findViewById(R.id.AddrTwoResult);
 
         /*
-         * Initialize Places. For simplicity, the API key is hard-coded. In a production
-         * environment we recommend using a secure mechanism to manage API keys.
+         * Initialize Places.
          */
         if (!Places.isInitialized()) {
             Places.initialize(getApplicationContext(), placeAPIKey);
         }
 
-        // Initialize the AutocompleteSupportFragment.
+        // Initialize the first AutocompleteSupportFragment.
         AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
                 getSupportFragmentManager().findFragmentById(R.id.autocomplete_frag_address1);
 
@@ -57,7 +56,7 @@ public class LandingPage extends AppCompatActivity {
             }
         });
 
-        // Initialize the AutocompleteSupportFragment.
+        // Initialize the second AutocompleteSupportFragment.
         AutocompleteSupportFragment autocompleteFragment2 = (AutocompleteSupportFragment)
                 getSupportFragmentManager().findFragmentById(R.id.autocomplete_frag_address2);
 
