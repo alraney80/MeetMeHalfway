@@ -3,9 +3,9 @@ package com.example.meetmehalfway;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.libraries.places.api.Places;
@@ -18,18 +18,18 @@ import java.util.Arrays;
 public class LandingPage extends AppCompatActivity {
 
     private Button enterButton;
-    private static final String TAG = "YOUR-TAG-NAME";
+    //private static final String TAG = "YOUR-TAG-NAME";
     private String placeAPIKey = BuildConfig.PlaceAPIKey;
-
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing_page);
+        final TextView addr1Result = findViewById(R.id.AddrOneResult);
+        final TextView addr2Result = findViewById(R.id.AddrTwoResult);
 
-
-        /**
+        /*
          * Initialize Places. For simplicity, the API key is hard-coded. In a production
          * environment we recommend using a secure mechanism to manage API keys.
          */
@@ -47,13 +47,13 @@ public class LandingPage extends AppCompatActivity {
             @Override
             public void onPlaceSelected(Place place) {
                 // TODO: Get info about the selected place.
-                Log.i(TAG, "Place: " + place.getName() + ", " + place.getId());
+                addr1Result.setText(place.getName());
             }
 
             @Override
             public void onError(Status status) {
                 // TODO: Handle the error.
-                Log.i(TAG, "An error occurred: " + status);
+                addr1Result.setText(status.toString());
             }
         });
 
@@ -67,13 +67,13 @@ public class LandingPage extends AppCompatActivity {
             @Override
             public void onPlaceSelected(Place place) {
                 // TODO: Get info about the selected place.
-                Log.i(TAG, "Place: " + place.getName() + ", " + place.getId());
+                addr2Result.setText(place.getName());
             }
 
             @Override
             public void onError(Status status) {
                 // TODO: Handle the error.
-                Log.i(TAG, "An error occurred: " + status);
+                addr2Result.setText(status.toString());
             }
         });
 
