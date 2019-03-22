@@ -9,17 +9,22 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        resValue 'string', "google_maps_key",(project.findProperty("GOOGLE_MAPS_API_KEY") ?: "")
     }
     buildTypes {
         debug {
             buildConfigField 'String', "PlaceAPIKey", MeetMeHalfway_PlacesAPIKey
             resValue 'string', "place_api_key", MeetMeHalfway_PlacesAPIKey
+            buildConfigField 'String', "GeocodeAPIKey", MeetMeHalfway_GeoCodeKey
+            resValue 'string', "geocode_api_key", MeetMeHalfway_GeoCodeKey
         }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             buildConfigField 'String', "PlaceAPIKey", MeetMeHalfway_PlacesAPIKey
             resValue 'string', "place_api_key", MeetMeHalfway_PlacesAPIKey
+            buildConfigField 'String', "GeocodeAPIKey", MeetMeHalfway_GeoCodeKey
+            resValue 'string', "geocode_api_key", MeetMeHalfway_GeoCodeKey
         }
     }
 }

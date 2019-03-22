@@ -7,6 +7,7 @@
          location permissions for the 'MyLocation' functionality.
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="true"
@@ -44,8 +45,8 @@
         </activity>
 
         <meta-data android:name="com.google.android.geo.Places_API_KEY" android:value="AIzaSyCi9m_BV4MA1CdH5kU7qUvqQ_mQrpB9L5U"/>
-
-
+        <meta-data android:name="com.google.gms.version" android:value="@integer/google_play_services_version" />
+        <meta-data android:name="com.google.android.geo.Geocode_API_KEY" android:value="AIzaSyD3QZ9CGduWEiA5qIXEYh6imLFZ2eUTBCk"/>
     </application>
 
 </manifest>
