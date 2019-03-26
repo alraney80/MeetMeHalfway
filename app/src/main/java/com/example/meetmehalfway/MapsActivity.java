@@ -75,9 +75,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Circle circle = map.addCircle(new CircleOptions()
                 .center(center)
                 .radius(radius*1609.34)
-                .strokeColor(Color.RED)
-                .fillColor(Color.BLUE));
-
+                .strokeColor(Color.BLUE));
 
 
         // This zooms in the map so that you only see the two addresses instead of the world view.
