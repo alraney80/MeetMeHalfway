@@ -7,7 +7,7 @@
     <string name="button_enter">Continue</string>
     <string name="title">Meet Me Halfway</string>
     <string-array name="radius_array">
-        <item>Choose Radius</item>
+        <item>Choose Radius (miles)</item>
         <item>5</item>
         <item>10</item>
         <item>25</item>

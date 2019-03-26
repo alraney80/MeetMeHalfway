@@ -1,19 +1,23 @@
 package com.example.meetmehalfway;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
     private LatLng addr1;
     private LatLng addr2;
+    private LatLng center;
+    private int radius;
     private GoogleMap mMap;
 
     @Override
@@ -23,11 +27,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         addr1 = getIntent().getParcelableExtra("Addr1LatLng");
         addr2 = getIntent().getParcelableExtra("Addr2LatLng");
-
-        Log.d("**************Addr 1", "" + addr1);
-        Log.d("**************Addr 2", "" + addr2);
-
-
+        radius = getIntent().getIntExtra("Radius", 10);
 
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -41,5 +41,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.addMarker(new MarkerOptions().position(addr1).title("Address 1"));
         mMap.addMarker(new MarkerOptions().position(addr2).title("Address 2"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(addr1));
+
+        //center is a LatLng to be changed later after we have algorithm to determine this
+        center = addr1;
+        Circle circle = map.addCircle(new CircleOptions()
+            .center(center)
+            .radius(radius*1609.34)
+            .strokeColor(Color.RED)
+            .fillColor(Color.BLUE));
     }
 }
+

@@ -4,7 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.android.gms.common.api.Status;
@@ -24,6 +27,8 @@ public class LandingPage extends AppCompatActivity {
     TextView addr2Result;
     LatLng addr1LatLng;
     LatLng addr2LatLng;
+    String selectedRadius;
+    int finalRadius;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +87,29 @@ public class LandingPage extends AppCompatActivity {
             }
         });
 
+        //set up radius spinner
+        Spinner radius = (Spinner) findViewById(R.id.radius_spinner);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.radius_array, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        radius.setAdapter(adapter);
+        //set value of spinner to selectedRadius variable
+        radius.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+                selectedRadius = (String)parent.getItemAtPosition(pos);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
         enterButton = findViewById(R.id.enterButton);
         enterButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,10 +120,13 @@ public class LandingPage extends AppCompatActivity {
     }
 
     public void OpenMapsActivity(LatLng Addr1LatLng, LatLng Addr2LatLng) {
+        //convert radius (string) to int
+        finalRadius = Integer.valueOf(selectedRadius);
         Intent intent = new Intent(this, MapsActivity.class);
         Bundle bundle = new Bundle();
         bundle.putParcelable("Addr1LatLng", Addr1LatLng);
         bundle.putParcelable("Addr2LatLng", Addr2LatLng);
+        bundle.putInt("Radius", finalRadius);
         intent.putExtras(bundle);
         if(intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
