@@ -10,14 +10,8 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
-import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
-
-import java.util.Arrays;
 
 public class LandingPage extends AppCompatActivity {
 
@@ -42,50 +36,52 @@ public class LandingPage extends AppCompatActivity {
             Places.initialize(getApplicationContext(), placeAPIKey);
         }
 
+        addr1LatLng = new LatLng(33.207488, -97.1525862);
+        addr2LatLng = new LatLng(33.2545925,-97.1526615);
         // Initialize the first AutocompleteSupportFragment.
-        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
-                getSupportFragmentManager().findFragmentById(R.id.autocomplete_frag_address1);
-
-        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG));
-        addr1Result = this.findViewById(R.id.AddrOneResult);
-        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-            @Override
-            public void onPlaceSelected(Place place) {
-                // TODO: Get info about the selected place.
-                //addr1Result = findViewById(R.id.AddrOneResult);
-                addr1Result.setText(place.getName());
-                addr1LatLng = place.getLatLng();
-            }
-
-            @Override
-            public void onError(Status status) {
-                // TODO: Handle the error.
-                addr1Result.setText(status.toString());
-            }
-        });
+//        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
+//                getSupportFragmentManager().findFragmentById(R.id.autocomplete_frag_address1);
+//
+//        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG));
+//        addr1Result = this.findViewById(R.id.AddrOneResult);
+//        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+//            @Override
+//            public void onPlaceSelected(Place place) {
+//                // TODO: Get info about the selected place.
+//                //addr1Result = findViewById(R.id.AddrOneResult);
+//                addr1Result.setText(place.getName());
+//                addr1LatLng = place.getLatLng();
+//            }
+//
+//            @Override
+//            public void onError(Status status) {
+//                // TODO: Handle the error.
+//                addr1Result.setText(status.toString());
+//            }
+//        });
 
         // Initialize the second AutocompleteSupportFragment.
-        AutocompleteSupportFragment autocompleteFragment2 = (AutocompleteSupportFragment)
-                getSupportFragmentManager().findFragmentById(R.id.autocomplete_frag_address2);
-
-        autocompleteFragment2.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG));
-        addr2Result = this.findViewById(R.id.AddrTwoResult);
-
-        autocompleteFragment2.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-            @Override
-            public void onPlaceSelected(Place place) {
-                // TODO: Get info about the selected place.
-                //addr2Result = findViewById(R.id.AddrTwoResult);
-                addr2Result.setText(place.getName());
-                addr2LatLng = place.getLatLng();
-            }
-
-            @Override
-            public void onError(Status status) {
-                // TODO: Handle the error.
-                addr2Result.setText(status.toString());
-            }
-        });
+//        AutocompleteSupportFragment autocompleteFragment2 = (AutocompleteSupportFragment)
+//                getSupportFragmentManager().findFragmentById(R.id.autocomplete_frag_address2);
+//
+//        autocompleteFragment2.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG));
+//        addr2Result = this.findViewById(R.id.AddrTwoResult);
+//
+//        autocompleteFragment2.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+//            @Override
+//            public void onPlaceSelected(Place place) {
+//                // TODO: Get info about the selected place.
+//                //addr2Result = findViewById(R.id.AddrTwoResult);
+//                addr2Result.setText(place.getName());
+//                addr2LatLng = place.getLatLng();
+//            }
+//
+//            @Override
+//            public void onError(Status status) {
+//                // TODO: Handle the error.
+//                addr2Result.setText(status.toString());
+//            }
+//        });
 
         //set up radius spinner
         Spinner radius = (Spinner) findViewById(R.id.radius_spinner);

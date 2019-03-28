@@ -7,7 +7,7 @@
          location permissions for the 'MyLocation' functionality.
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -17,15 +17,22 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName=".MapsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.meetmehalfway.MapsActivity" />
+        </activity>
+        <activity
             android:name=".LandingPage"
             android:label="@string/title_activity_landing_page"
             android:theme="@style/AppTheme.NoActionBar">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -37,16 +44,21 @@
         -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-        android:value="@string/google_maps_key" />
+            android:value="@string/google_maps_key" />
 
         <activity
             android:name=".MapsActivity"
-            android:label="@string/title_activity_maps">
-        </activity>
+            android:label="@string/title_activity_maps"></activity>
 
-        <meta-data android:name="com.google.android.geo.Places_API_KEY" android:value="AIzaSyCi9m_BV4MA1CdH5kU7qUvqQ_mQrpB9L5U"/>
-        <meta-data android:name="com.google.gms.version" android:value="@integer/google_play_services_version" />
-        <meta-data android:name="com.google.android.geo.Geocode_API_KEY" android:value="AIzaSyD3QZ9CGduWEiA5qIXEYh6imLFZ2eUTBCk"/>
+        <meta-data
+            android:name="com.google.android.geo.Places_API_KEY"
+            android:value="AIzaSyCi9m_BV4MA1CdH5kU7qUvqQ_mQrpB9L5U" />
+        <meta-data
+            android:name="com.google.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.geo.Geocode_API_KEY"
+            android:value="AIzaSyD3QZ9CGduWEiA5qIXEYh6imLFZ2eUTBCk" />
     </application>
 
 </manifest>
