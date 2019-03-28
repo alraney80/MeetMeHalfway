@@ -70,8 +70,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         markerPoints.add(addr1);
         markerPoints.add(addr2);
 
+        center = LatLngBounds.builder().include(addr1).include(addr2).build().getCenter();
+
         //center is a LatLng to be changed later after we have algorithm to determine this
-        center = addr1;
+        //center = addr1;
         Circle circle = map.addCircle(new CircleOptions()
                 .center(center)
                 .radius(radius*1609.34)
@@ -395,6 +397,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         else {
             Log.d("onPostExecute","without Polylines drawn");
         }
+
     }
 }
 
