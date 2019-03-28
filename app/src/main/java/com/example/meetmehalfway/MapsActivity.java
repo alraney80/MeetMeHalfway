@@ -1,10 +1,13 @@
 package com.example.meetmehalfway;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.View;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -48,7 +51,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         addr1 = getIntent().getParcelableExtra("Addr1LatLng");
         addr2 = getIntent().getParcelableExtra("Addr2LatLng");
-        radius = getIntent().getIntExtra("Radius", 10);
+        radius = getIntent().getIntExtra("Radius", 1);
+
+        //Settings Page
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.settingsButton);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent modifySettings=new Intent(MapsActivity.this,SettingsActivity.class);
+                startActivity(modifySettings);
+            }
+        });
+
+        //SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
