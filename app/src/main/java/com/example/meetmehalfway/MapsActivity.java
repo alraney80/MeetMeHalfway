@@ -14,12 +14,16 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.maps.android.PolyUtil;
+import com.google.maps.android.SphericalUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -85,14 +89,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         markerPoints.add(addr1);
         markerPoints.add(addr2);
 
-        center = LatLngBounds.builder().include(addr1).include(addr2).build().getCenter();
+        //center = LatLngBounds.builder().include(addr1).include(addr2).build().getCenter();
 
-        //center is a LatLng to be changed later after we have algorithm to determine this
-        //center = addr1;
-        Circle circle = map.addCircle(new CircleOptions()
-                .center(center)
-                .radius(radius*1609.34)
-                .strokeColor(Color.BLUE));
+//        //center is a LatLng to be changed later after we have algorithm to determine this
+//        //center = addr1;
+//        Circle circle = map.addCircle(new CircleOptions()
+//                .center(center)
+//                .radius(radius*1609.34)
+//                .strokeColor(Color.BLUE));
 
 
         // This zooms in the map so that you only see the two addresses instead of the world view.
@@ -103,7 +107,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LatLngBounds bounds = builder.build();
         int width = getResources().getDisplayMetrics().widthPixels;
         int height = getResources().getDisplayMetrics().heightPixels;
-        int padding = (int) (width * 0.10); // offset from edges of the map 10% of screen
+        int padding = (int) (width * 0.50); // offset from edges of the map 10% of screen
         CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
         mMap.animateCamera(cu);
         //End Zoom Code
@@ -242,6 +246,55 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return routes;
         }
 
+        private LatLng extrapolate(List<LatLng> path, LatLng origin, double distance) {
+            LatLng extrapolated = null;
+
+            if (!PolyUtil.isLocationOnPath(origin, path, false, 1)) { // If the location is not on path non geodesic, 1 meter tolerance
+                return null;
+            }
+
+            float accDistance = 0f;
+            boolean foundStart = false;
+            List<LatLng> segment = new ArrayList<>();
+
+            for (int i = 0; i < path.size() - 1; i++) {
+                LatLng segmentStart = path.get(i);
+                LatLng segmentEnd = path.get(i + 1);
+
+                segment.clear();
+                segment.add(segmentStart);
+                segment.add(segmentEnd);
+
+                double currentDistance = 0d;
+
+                if (!foundStart) {
+                    if (PolyUtil.isLocationOnPath(origin, segment, false, 1)) {
+                        foundStart = true;
+
+                        currentDistance = SphericalUtil.computeDistanceBetween(origin, segmentEnd);
+
+                        if (currentDistance > distance) {
+                            double heading = SphericalUtil.computeHeading(origin, segmentEnd);
+                            extrapolated = SphericalUtil.computeOffset(origin, distance - accDistance, heading);
+                            break;
+                        }
+                    }
+                } else {
+                    currentDistance = SphericalUtil.computeDistanceBetween(segmentStart, segmentEnd);
+
+                    if (currentDistance + accDistance > distance) {
+                        double heading = SphericalUtil.computeHeading(segmentStart, segmentEnd);
+                        extrapolated = SphericalUtil.computeOffset(segmentStart, distance - accDistance, heading);
+                        break;
+                    }
+                }
+
+                accDistance += currentDistance;
+            }
+
+            return extrapolated;
+        }
+
         // Executes in UI thread, after the parsing process
         @Override
         protected void onPostExecute(List<List<HashMap<String, String>>> result) {
@@ -279,10 +332,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // Drawing polyline in the Google Map for the i-th route
             if(lineOptions != null) {
                 mMap.addPolyline(lineOptions);
-            }
+           }
             else {
                 Log.d("onPostExecute","without Polylines drawn");
             }
+
+            double middleDistance = SphericalUtil.computeLength(lineOptions.getPoints());
+
+            LatLng center = extrapolate(lineOptions.getPoints(), lineOptions.getPoints().get(0), (middleDistance/2));
+
+            mMap.addMarker(new MarkerOptions().position(center).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(center)
+                    .zoom(10).build();
+
+                    //center is a LatLng to be changed later after we have algorithm to determine this
+        //center = addr1;
+        Circle circle = mMap.addCircle(new CircleOptions()
+                .center(center)
+                .radius(radius*1609.34)
+                .strokeColor(Color.BLUE));
+
+
         }
     }
     class DataParser {

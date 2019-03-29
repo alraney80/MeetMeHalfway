@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Meet Me Halfway</string>
     <string name="title_activity_maps">Map</string>
-    <string name="title_activity_landing_page">LandingPage</string>
+    <string name="title_activity_landing_page">Meet Me Halfway</string>
     <string name="addr_one">Enter Address 1</string>
     <string name="addr_two">Enter Address 2</string>
     <string name="button_enter">Continue</string>
