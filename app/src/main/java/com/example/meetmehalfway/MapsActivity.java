@@ -89,37 +89,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         markerPoints.add(addr1);
         markerPoints.add(addr2);
 
-        //center = LatLngBounds.builder().include(addr1).include(addr2).build().getCenter();
-
-//        //center is a LatLng to be changed later after we have algorithm to determine this
-//        //center = addr1;
-//        Circle circle = map.addCircle(new CircleOptions()
-//                .center(center)
-//                .radius(radius*1609.34)
-//                .strokeColor(Color.BLUE));
-
-
-        // This zooms in the map so that you only see the two addresses instead of the world view.
-        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        //the include method will calculate the min and max bound.
-        builder.include(place1.getPosition());
-        builder.include(place2.getPosition());
-        LatLngBounds bounds = builder.build();
-        int width = getResources().getDisplayMetrics().widthPixels;
-        int height = getResources().getDisplayMetrics().heightPixels;
-        int padding = (int) (width * 0.50); // offset from edges of the map 10% of screen
-        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
-        mMap.animateCamera(cu);
-        //End Zoom Code
-
         String url = getDirectionsUrl(place1.getPosition(), place2.getPosition());
 
         FetchUrl fetchUrl = new FetchUrl();
 
         // Start downloading json data from Google Directions API
         fetchUrl.execute(url);
-
-
     }
 
     private class FetchUrl extends AsyncTask<String, Void, String> {
@@ -353,6 +328,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .radius(radius*1609.34)
                 .strokeColor(Color.BLUE));
 
+            //This zooms in the map so that you only see the two addresses instead of the world view.
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            //the include method will calculate the min and max bound.
+            builder.include(place1.getPosition());
+            builder.include(place2.getPosition());
+            builder.include(center);
+            LatLngBounds bounds = builder.build();
+            int width = getResources().getDisplayMetrics().widthPixels;
+            int height = getResources().getDisplayMetrics().heightPixels;
+            int padding = (int) (width * 0.3); // offset from edges of the map 10% of screen
+            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
+            mMap.animateCamera(cu);
+            //End Zoom Code
 
         }
     }
