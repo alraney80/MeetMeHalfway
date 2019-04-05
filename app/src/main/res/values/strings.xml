@@ -14,7 +14,38 @@
         <item>25</item>
         <item>50</item>
     </string-array>
+    <string-array name ="empty_array">
+    </string-array>
     <string name="title_activity_settings">Settings</string>
+
+    <!-- Map Options strings -->
+    <string name="pref_header_map_options">Map Options</string>
+    <string name="pref_title_map_radius">Change radius for location results</string>
+    <string name="pref_key_map_radius">map_radius</string>
+    <string-array name="pref_map_radius_titles">
+        <item>1 mile</item>
+        <item>5 miles</item>
+        <item>10 miles</item>
+        <item>25 miles</item>
+        <item>50 miles</item>
+    </string-array>
+    <string-array name="pref_map_radius_values">
+        <item>1</item>
+        <item>5</item>
+        <item>10</item>
+        <item>25</item>
+        <item>50</item>
+    </string-array>
+    <string name="pref_title_loc_type">Safe Places Only</string>
+    <string name="pref_description_loc_type">Results will only display safe locations (police stations, fire departments, public libraries, etc</string>
+    <string name="pref_key_safe_places">safe_places_only</string>
+
+
+    <!-- User Settings strings -->
+    <string name="pref_header_user_settings">Settings</string>
+
+    <!-- About strings -->
+    <string name="pref_header_about">About</string>
 
     <!-- Strings related to Settings -->
 

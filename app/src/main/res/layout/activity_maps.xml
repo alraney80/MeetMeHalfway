@@ -15,7 +15,8 @@
         android:layout_gravity="start|top"
         android:layout_margin="16dp"
         android:src="@android:drawable/ic_menu_preferences"
-        android:visibility="visible" />
+        android:visibility="visible"
+        map:fabSize="mini" />
 
     <TextView
         android:id="@+id/settingsContent"
