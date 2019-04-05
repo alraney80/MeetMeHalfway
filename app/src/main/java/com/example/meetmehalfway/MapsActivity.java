@@ -1,9 +1,11 @@
 package com.example.meetmehalfway;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -48,6 +50,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     MarkerOptions place1, place2;
     ArrayList markerPoints= new ArrayList();
+    Circle circle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,10 +59,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         addr1 = getIntent().getParcelableExtra("Addr1LatLng");
         addr2 = getIntent().getParcelableExtra("Addr2LatLng");
-        radius = getIntent().getIntExtra("Radius", 1);
 
-        //Settings Page
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.settingsButton);
+        //To open settings page
+        FloatingActionButton fab = findViewById(R.id.settingsButton);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -67,12 +69,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 startActivity(modifySettings);
             }
         });
+    }
 
-        //SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+    @Override
+    public void onResume() {
+        super.onResume();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String radiusPref;
+        radiusPref = prefs.getString("radius_key", "1");
+        radius = Integer.parseInt(radiusPref);
+
+        if(circle != null) {
+            circle.remove();
+        }
 
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
     }
 
     /**
@@ -97,7 +115,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Start downloading json data from Google Directions API
         fetchUrl.execute(url);
 
-        StringBuilder pnValue = new StringBuilder(pnMethod(center));
+        String type = "restaurant";
+        StringBuilder pnValue = new StringBuilder(pnMethod(center, radius, type));
         PlacesTask placesTask = new PlacesTask();
         placesTask.execute(pnValue.toString()); //OG
         //placesTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
@@ -180,25 +199,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         // https://maps.googleapis.com/maps/api/directions/json?origin=33.2534746,-97.1539148&destination=33.23599679999999,-96.7148&mode=driving&key=AIzaSyBguDOBAg_Zi2K5DAFRO83idl4ucvNhyGo
-
-
-
-
-//        // Origin of route
-//        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
-//        // Destination of route
-//        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
-//        // Sensor enabled
-//        String sensor = "sensor=false";
-//        String mode = "mode=driving";
-//        // Building the parameters to the web service
-//        String parameters = str_origin + "&" + str_dest + "&" + sensor + "&" + mode;
-//        // Output format
-//        String output = "json";
-//        // Building the url to the web service
-//        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters;
-
-        //return url;
     }
     private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
 
@@ -313,7 +313,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // Drawing polyline in the Google Map for the i-th route
             if(lineOptions != null) {
                 mMap.addPolyline(lineOptions);
-           }
+            }
             else {
                 Log.d("onPostExecute","without Polylines drawn");
             }
@@ -330,12 +330,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     .target(center)
                     .zoom(10).build();
 
-                    //center is a LatLng to be changed later after we have algorithm to determine this
-        //center = addr1;
-        Circle circle = mMap.addCircle(new CircleOptions()
-                .center(center)
-                .radius(radius*1609.34)
-                .strokeColor(Color.BLUE));
+            //creates radius circle
+             circle = mMap.addCircle(new CircleOptions()
+                    .center(center)
+                    .radius(radius*1609.34)
+                    .strokeColor(Color.BLUE));
 
             //This zooms in the map so that you only see the two addresses instead of the world view.
             LatLngBounds.Builder builder = new LatLngBounds.Builder();
@@ -441,7 +440,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-       protected void onPostExecute(List<List<HashMap<String, String>>> result) {
+    protected void onPostExecute(List<List<HashMap<String, String>>> result) {
         ArrayList<LatLng> points;
         PolylineOptions lineOptions = null;
 
@@ -483,7 +482,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    public StringBuilder pnMethod(LatLng center) {
+    public StringBuilder pnMethod(LatLng center, int radius, String type) {
 
         //use the halfway point location here, currently its just a California location.
         double mLatitude = 33.241586533325226; //OG
@@ -494,8 +493,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         StringBuilder pn = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
         pn.append("location=" + mLatitude + "," + mLongitude);
-        pn.append("&radius=1609.34");
-        pn.append("&types=" + "hospital");
+        pn.append("&radius=" +"1609");
+        pn.append("&types=" + type);
         //pn.append("&types=" + "restaurant");
         pn.append("&sensor=true");
         //Key value = AlzaSyBguDOBAg_Zi2K5DAFRO83idl4ucvNhyGo
@@ -617,7 +616,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public class Place_JSON {
-         //Receives a JSONObject and returns a list
+        //Receives a JSONObject and returns a list
 
         public List<HashMap<String, String>> parse(JSONObject jObject) {
 
@@ -651,7 +650,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
 
-         // Parsing the Place JSON object
+        // Parsing the Place JSON object
         private HashMap<String, String> getPlace(JSONObject jPlace) {
 
             HashMap<String, String> place = new HashMap<String, String>();

@@ -44,7 +44,6 @@ public class LandingPage extends AppCompatActivity {
 //        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
 //            @Override
 //            public void onPlaceSelected(Place place) {
-//                // TODO: Get info about the selected place.
 //                //addr1Result = findViewById(R.id.AddrOneResult);
 //                addr1Result.setText(place.getName());
 //                addr1LatLng = place.getLatLng();
@@ -67,7 +66,6 @@ public class LandingPage extends AppCompatActivity {
 //        autocompleteFragment2.setOnPlaceSelectedListener(new PlaceSelectionListener() {
 //            @Override
 //            public void onPlaceSelected(Place place) {
-//                // TODO: Get info about the selected place.
 //                //addr2Result = findViewById(R.id.AddrTwoResult);
 //                addr2Result.setText(place.getName());
 //                addr2LatLng = place.getLatLng();
@@ -114,7 +112,7 @@ public class LandingPage extends AppCompatActivity {
 
     public void OpenMapsActivity(LatLng Addr1LatLng, LatLng Addr2LatLng) {
         //convert radius (string) to int
-        //finalRadius = Integer.valueOf(selectedRadius);
+        /*finalRadius = Integer.valueOf(selectedRadius);*/
         finalRadius = 1;
         Intent intent = new Intent(this, MapsActivity.class);
         Bundle bundle = new Bundle();
