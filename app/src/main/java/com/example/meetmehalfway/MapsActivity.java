@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -44,8 +45,8 @@ import java.util.List;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
     private LatLng addr1;
     private LatLng addr2;
-    private LatLng center;
-    private int radius;
+    public LatLng center;
+    public int radius;
     private GoogleMap mMap;
     MarkerOptions place1, place2;
     ArrayList markerPoints= new ArrayList();
@@ -115,6 +116,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // Start downloading json data from Google Directions API
         fetchUrl.execute(url);
+
     }
 
     private class FetchUrl extends AsyncTask<String, Void, String> {
@@ -194,25 +196,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         // https://maps.googleapis.com/maps/api/directions/json?origin=33.2534746,-97.1539148&destination=33.23599679999999,-96.7148&mode=driving&key=AIzaSyBguDOBAg_Zi2K5DAFRO83idl4ucvNhyGo
-
-
-
-
-//        // Origin of route
-//        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
-//        // Destination of route
-//        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
-//        // Sensor enabled
-//        String sensor = "sensor=false";
-//        String mode = "mode=driving";
-//        // Building the parameters to the web service
-//        String parameters = str_origin + "&" + str_dest + "&" + sensor + "&" + mode;
-//        // Output format
-//        String output = "json";
-//        // Building the url to the web service
-//        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters;
-
-        //return url;
     }
     private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
 
@@ -327,14 +310,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // Drawing polyline in the Google Map for the i-th route
             if(lineOptions != null) {
                 mMap.addPolyline(lineOptions);
-           }
+            }
             else {
                 Log.d("onPostExecute","without Polylines drawn");
             }
 
             double middleDistance = SphericalUtil.computeLength(lineOptions.getPoints());
 
-            LatLng center = extrapolate(lineOptions.getPoints(), lineOptions.getPoints().get(0), (middleDistance/2));
+            center = extrapolate(lineOptions.getPoints(), lineOptions.getPoints().get(0), (middleDistance/2));
+
+            //Log.d("onPostExecute","without Polylines drawn");
+            //Log.d("latitude = "+ center.latitude, "longitude = "+ center.longitude);
 
             mMap.addMarker(new MarkerOptions().position(center).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
             CameraPosition cameraPosition = new CameraPosition.Builder()
@@ -342,7 +328,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     .zoom(10).build();
 
             //creates radius circle
-            circle = mMap.addCircle(new CircleOptions()
+             circle = mMap.addCircle(new CircleOptions()
                     .center(center)
                     .radius(radius*1609.34)
                     .strokeColor(Color.BLUE));
@@ -356,10 +342,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             LatLngBounds bounds = builder.build();
             int width = getResources().getDisplayMetrics().widthPixels;
             int height = getResources().getDisplayMetrics().heightPixels;
-            int padding = (int) (width * 0.3); // offset from edges of the map 10% of screen
+            int padding = (int) (width * 0.4); // offset from edges of the map 10% of screen
             CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
             mMap.animateCamera(cu);
             //End Zoom Code
+
+            String type = "restaurant";
+
+            StringBuilder pnValue = new StringBuilder(pnMethod(center, radius, type));
+            PlacesTask placesTask = new PlacesTask();
+            placesTask.execute(pnValue.toString()); //OG
+
+
 
         }
     }
@@ -451,7 +445,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-       protected void onPostExecute(List<List<HashMap<String, String>>> result) {
+    protected void onPostExecute(List<List<HashMap<String, String>>> result) {
         ArrayList<LatLng> points;
         PolylineOptions lineOptions = null;
 
@@ -491,6 +485,215 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Log.d("onPostExecute","without Polylines drawn");
         }
 
+    }
+
+    public StringBuilder pnMethod(LatLng cent, int rad, String type) {
+
+        //use the halfway point location here, currently its just a California location.
+        //double mLatitude = 33.241586533325226; //OG
+        //double mLongitude = -97.17666; //OG
+
+        //double mLatitude = center.latitude;
+        //double mLongitude = center.longitude;
+        Log.d("latitude = "+ cent.latitude, "longitude = "+ cent.longitude);
+
+        StringBuilder pn = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
+        pn.append("location=" + cent.latitude + "," + cent.longitude);
+
+        pn.append("&radius=" +(rad*1609));
+        pn.append("&types=" + type);
+        //pn.append("&types=" + "restaurant");
+        pn.append("&sensor=true");
+        //Key value = AlzaSyBguDOBAg_Zi2K5DAFRO83idl4ucvNhyGo
+        pn.append("&key=" + getString(R.string.google_maps_key));
+
+        Log.d("Map", "api: " + pn.toString());
+
+        return pn;
+    }
+
+    private class PlacesTask extends AsyncTask<String, Integer, String> {
+
+        //String data = null;
+
+        // Invoked by execute() method of this object
+        @Override
+        protected String doInBackground(String... url) {
+
+            String data = "";
+            try {
+                data = downloadUrl(url[0]);
+            } catch (Exception e) {
+                Log.d("Background Task", e.toString());
+            }
+            return data;
+        }
+
+        // Executed after the complete execution of doInBackground() method
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            ParsingNearby parseNearby = new ParsingNearby();
+
+            // Start parsing the Google places in JSON format
+            // Invokes the "doInBackground()" method of the class ParserTask
+            parseNearby.execute(result);
+        }
+    }
+
+    private class ParsingNearby extends AsyncTask<String, Integer, List<HashMap<String, String>>> {
+
+        //JSONObject jObject; //OG
+
+        // Invoked by execute() method of this object
+        @Override
+        protected List<HashMap<String, String>> doInBackground(String... jsonData) {
+
+            JSONObject jObject;
+            MarkerOptions pn1;
+            List<HashMap<String, String>> places = null;
+            //Place_JSON placeJson = new Place_JSON(); //OG
+
+            try {
+                jObject = new JSONObject(jsonData[0]);
+                Log.d("ParsingNearby", jsonData[0].toString());
+                Place_JSON placeJson = new Place_JSON();
+                Log.d("ParsingNearby", placeJson.toString());
+
+                places = placeJson.parse(jObject);
+                Log.d("ParsingNearby", "Executing nearby places");
+                Log.d("ParsingNearby", places.toString());
+
+            } catch (Exception e) {
+                Log.d("Exception", e.toString());
+                e.printStackTrace();
+            }
+            return places;
+        }
+
+        // Executed after the complete execution of doInBackground() method
+        @Override
+        protected void onPostExecute(List<HashMap<String, String>> list) {
+
+            Log.d("Map", "list size: " + list.size());
+            // Clears all the existing markers;
+            //mMap.clear();
+
+            for (int i = 0; i < list.size(); i++) {
+
+                // Creating a marker
+                MarkerOptions markerOptions = new MarkerOptions();
+
+                // Getting a place from the places list
+                HashMap<String, String> hmPlace = list.get(i);
+
+
+                // Getting latitude of the place
+                double lat = Double.parseDouble(hmPlace.get("lat"));
+
+                // Getting longitude of the place
+                double lng = Double.parseDouble(hmPlace.get("lng"));
+
+                // Getting name
+                String name = hmPlace.get("place_name");
+
+                Log.d("Map", "place: " + name);
+
+                // Getting vicinity
+                String vicinity = hmPlace.get("vicinity");
+
+                LatLng latLng = new LatLng(lat, lng);
+
+                // Setting the position for the marker
+                markerOptions.position(latLng);
+                //pn1 = new MarkerOptions().position(latLng);
+                //mMap.addMarker(pn1.title(name + " : " + vicinity));
+
+
+                markerOptions.title(name + " : " + vicinity); //OG
+
+                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+
+                // Placing a marker on the touched position
+                mMap.addMarker(markerOptions);
+
+            }
+        }
+    }
+
+    public class Place_JSON {
+        //Receives a JSONObject and returns a list
+
+        public List<HashMap<String, String>> parse(JSONObject jObject) {
+
+            JSONArray jPlaces = null;
+            try {
+                // Retrieves all the elements in the 'places' array */
+                jPlaces = jObject.getJSONArray("results");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            // Invoking getPlaces with the array of json object where each json object represent a place
+            return getPlaces(jPlaces);
+        }
+
+        private List<HashMap<String, String>> getPlaces(JSONArray jPlaces) {
+            int placesCount = jPlaces.length();
+            List<HashMap<String, String>> placesList = new ArrayList<HashMap<String, String>>();
+            HashMap<String, String> place = null;
+
+            // Taking each place, parses and adds to list object */
+            for (int i = 0; i < placesCount; i++) {
+                try {
+                    // Call getPlace with place JSON object to parse the place */
+                    place = getPlace((JSONObject) jPlaces.get(i));
+                    placesList.add(place);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            return placesList;
+        }
+
+
+        // Parsing the Place JSON object
+        private HashMap<String, String> getPlace(JSONObject jPlace) {
+
+            HashMap<String, String> place = new HashMap<String, String>();
+            String placeName = "-NA-";
+            String vicinity = "-NA-";
+            String latitude = "";
+            String longitude = "";
+            String reference = "";
+            //String placeAddress = "-NA-"
+
+            try {
+                // Extracting Place name, if available
+                if (!jPlace.isNull("name")) {
+                    placeName = jPlace.getString("name");
+                }
+
+                // Extracting the Places Nearby, if available
+                if (!jPlace.isNull("vicinity")) {
+                    vicinity = jPlace.getString("vicinity");
+                }
+
+                latitude = jPlace.getJSONObject("geometry").getJSONObject("location").getString("lat");
+                longitude = jPlace.getJSONObject("geometry").getJSONObject("location").getString("lng");
+                reference = jPlace.getString("reference");
+
+                place.put("place_name", placeName);
+                place.put("vicinity", vicinity);
+                place.put("lat", latitude);
+                place.put("lng", longitude);
+                place.put("reference", reference);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return place;
+        }
     }
 }
 
