@@ -1,9 +1,11 @@
 package com.example.meetmehalfway;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -48,6 +50,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     MarkerOptions place1, place2;
     ArrayList markerPoints= new ArrayList();
+    Circle circle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,10 +59,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         addr1 = getIntent().getParcelableExtra("Addr1LatLng");
         addr2 = getIntent().getParcelableExtra("Addr2LatLng");
-        radius = getIntent().getIntExtra("Radius", 1);
 
-        //Settings Page
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.settingsButton);
+        //To open settings page
+        FloatingActionButton fab = findViewById(R.id.settingsButton);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -67,12 +69,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 startActivity(modifySettings);
             }
         });
+    }
 
-        //SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+    @Override
+    public void onResume() {
+        super.onResume();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String radiusPref;
+        radiusPref = prefs.getString("radius_key", "1");
+        radius = Integer.parseInt(radiusPref);
+
+        if(circle != null) {
+            circle.remove();
+        }
 
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
     }
 
     /**
@@ -312,9 +330,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     .target(center)
                     .zoom(10).build();
 
-            //center is a LatLng to be changed later after we have algorithm to determine this
-            //center = addr1;
-            Circle circle = mMap.addCircle(new CircleOptions()
+            //creates radius circle
+             circle = mMap.addCircle(new CircleOptions()
                     .center(center)
                     .radius(radius*1609.34)
                     .strokeColor(Color.BLUE));

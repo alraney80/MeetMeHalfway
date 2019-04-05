@@ -5,16 +5,16 @@
     <header
         android:fragment="com.example.meetmehalfway.SettingsActivity$GeneralPreferenceFragment"
         android:icon="@drawable/ic_info_black_24dp"
-        android:title="@string/pref_header_general" />
-
-    <header
-        android:fragment="com.example.meetmehalfway.SettingsActivity$NotificationPreferenceFragment"
-        android:icon="@drawable/ic_notifications_black_24dp"
-        android:title="@string/pref_header_notifications" />
+        android:title="@string/pref_header_user_settings" />
 
     <header
         android:fragment="com.example.meetmehalfway.SettingsActivity$DataSyncPreferenceFragment"
         android:icon="@drawable/ic_sync_black_24dp"
-        android:title="@string/pref_header_data_sync" />
+        android:title="@string/pref_header_map_options" />
+
+    <header
+        android:fragment="com.example.meetmehalfway.SettingsActivity$NotificationPreferenceFragment"
+        android:icon="@drawable/ic_notifications_black_24dp"
+        android:title="@string/pref_header_about" />
 
 </preference-headers>
