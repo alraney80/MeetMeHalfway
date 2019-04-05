@@ -45,8 +45,8 @@ import java.util.List;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
     private LatLng addr1;
     private LatLng addr2;
-    private LatLng center;
-    private int radius;
+    public LatLng center;
+    public int radius;
     private GoogleMap mMap;
     MarkerOptions place1, place2;
     ArrayList markerPoints= new ArrayList();
@@ -115,11 +115,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Start downloading json data from Google Directions API
         fetchUrl.execute(url);
 
-        String type = "restaurant";
-        StringBuilder pnValue = new StringBuilder(pnMethod(center, radius, type));
-        PlacesTask placesTask = new PlacesTask();
-        placesTask.execute(pnValue.toString()); //OG
-        //placesTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
     }
 
     private class FetchUrl extends AsyncTask<String, Void, String> {
@@ -320,7 +315,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             double middleDistance = SphericalUtil.computeLength(lineOptions.getPoints());
 
-            LatLng center = extrapolate(lineOptions.getPoints(), lineOptions.getPoints().get(0), (middleDistance/2));
+            center = extrapolate(lineOptions.getPoints(), lineOptions.getPoints().get(0), (middleDistance/2));
 
             //Log.d("onPostExecute","without Polylines drawn");
             //Log.d("latitude = "+ center.latitude, "longitude = "+ center.longitude);
@@ -349,6 +344,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
             mMap.animateCamera(cu);
             //End Zoom Code
+
+            String type = "restaurant";
+
+            StringBuilder pnValue = new StringBuilder(pnMethod(center, radius, type));
+            PlacesTask placesTask = new PlacesTask();
+            placesTask.execute(pnValue.toString()); //OG
+
+
 
         }
     }
@@ -482,18 +485,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    public StringBuilder pnMethod(LatLng center, int radius, String type) {
+    public StringBuilder pnMethod(LatLng cent, int rad, String type) {
 
         //use the halfway point location here, currently its just a California location.
-        double mLatitude = 33.241586533325226; //OG
-        double mLongitude = -97.17666; //OG
+        //double mLatitude = 33.241586533325226; //OG
+        //double mLongitude = -97.17666; //OG
 
         //double mLatitude = center.latitude;
         //double mLongitude = center.longitude;
+        Log.d("latitude = "+ cent.latitude, "longitude = "+ cent.longitude);
 
         StringBuilder pn = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
-        pn.append("location=" + mLatitude + "," + mLongitude);
-        pn.append("&radius=" +"1609");
+        pn.append("location=" + cent.latitude + "," + cent.longitude);
+
+        pn.append("&radius=" +(rad*1609));
         pn.append("&types=" + type);
         //pn.append("&types=" + "restaurant");
         pn.append("&sensor=true");
