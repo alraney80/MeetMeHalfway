@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -95,6 +96,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // Start downloading json data from Google Directions API
         fetchUrl.execute(url);
+
+        StringBuilder pnValue = new StringBuilder(pnMethod(center));
+        PlacesTask placesTask = new PlacesTask();
+        placesTask.execute(pnValue.toString()); //OG
+        //placesTask.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
     }
 
     private class FetchUrl extends AsyncTask<String, Void, String> {
@@ -316,6 +322,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             LatLng center = extrapolate(lineOptions.getPoints(), lineOptions.getPoints().get(0), (middleDistance/2));
 
+            //Log.d("onPostExecute","without Polylines drawn");
+            //Log.d("latitude = "+ center.latitude, "longitude = "+ center.longitude);
+
             mMap.addMarker(new MarkerOptions().position(center).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
             CameraPosition cameraPosition = new CameraPosition.Builder()
                     .target(center)
@@ -472,6 +481,212 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Log.d("onPostExecute","without Polylines drawn");
         }
 
+    }
+
+    public StringBuilder pnMethod(LatLng center) {
+
+        //use the halfway point location here, currently its just a California location.
+        double mLatitude = 33.241586533325226; //OG
+        double mLongitude = -97.17666; //OG
+
+        //double mLatitude = center.latitude;
+        //double mLongitude = center.longitude;
+
+        StringBuilder pn = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
+        pn.append("location=" + mLatitude + "," + mLongitude);
+        pn.append("&radius=1609.34");
+        pn.append("&types=" + "hospital");
+        //pn.append("&types=" + "restaurant");
+        pn.append("&sensor=true");
+        //Key value = AlzaSyBguDOBAg_Zi2K5DAFRO83idl4ucvNhyGo
+        pn.append("&key=" + getString(R.string.google_maps_key));
+
+        Log.d("Map", "api: " + pn.toString());
+
+        return pn;
+    }
+
+    private class PlacesTask extends AsyncTask<String, Integer, String> {
+
+        //String data = null;
+
+        // Invoked by execute() method of this object
+        @Override
+        protected String doInBackground(String... url) {
+
+            String data = "";
+            try {
+                data = downloadUrl(url[0]);
+            } catch (Exception e) {
+                Log.d("Background Task", e.toString());
+            }
+            return data;
+        }
+
+        // Executed after the complete execution of doInBackground() method
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            ParsingNearby parseNearby = new ParsingNearby();
+
+            // Start parsing the Google places in JSON format
+            // Invokes the "doInBackground()" method of the class ParserTask
+            parseNearby.execute(result);
+        }
+    }
+
+    private class ParsingNearby extends AsyncTask<String, Integer, List<HashMap<String, String>>> {
+
+        //JSONObject jObject; //OG
+
+        // Invoked by execute() method of this object
+        @Override
+        protected List<HashMap<String, String>> doInBackground(String... jsonData) {
+
+            JSONObject jObject;
+            MarkerOptions pn1;
+            List<HashMap<String, String>> places = null;
+            //Place_JSON placeJson = new Place_JSON(); //OG
+
+            try {
+                jObject = new JSONObject(jsonData[0]);
+                Log.d("ParsingNearby", jsonData[0].toString());
+                Place_JSON placeJson = new Place_JSON();
+                Log.d("ParsingNearby", placeJson.toString());
+
+                places = placeJson.parse(jObject);
+                Log.d("ParsingNearby", "Executing nearby places");
+                Log.d("ParsingNearby", places.toString());
+
+            } catch (Exception e) {
+                Log.d("Exception", e.toString());
+                e.printStackTrace();
+            }
+            return places;
+        }
+
+        // Executed after the complete execution of doInBackground() method
+        @Override
+        protected void onPostExecute(List<HashMap<String, String>> list) {
+
+            Log.d("Map", "list size: " + list.size());
+            // Clears all the existing markers;
+            //mMap.clear();
+
+            for (int i = 0; i < list.size(); i++) {
+
+                // Creating a marker
+                MarkerOptions markerOptions = new MarkerOptions();
+
+                // Getting a place from the places list
+                HashMap<String, String> hmPlace = list.get(i);
+
+
+                // Getting latitude of the place
+                double lat = Double.parseDouble(hmPlace.get("lat"));
+
+                // Getting longitude of the place
+                double lng = Double.parseDouble(hmPlace.get("lng"));
+
+                // Getting name
+                String name = hmPlace.get("place_name");
+
+                Log.d("Map", "place: " + name);
+
+                // Getting vicinity
+                String nearby = hmPlace.get("nearby");
+
+                LatLng latLng = new LatLng(lat, lng);
+
+                // Setting the position for the marker
+                markerOptions.position(latLng);
+                //pn1 = new MarkerOptions().position(latLng);
+                //mMap.addMarker(pn1.title(name + " : " + nearby));
+
+
+                markerOptions.title(name + " : " + nearby); //OG
+
+                markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+
+                // Placing a marker on the touched position
+                mMap.addMarker(markerOptions);
+
+            }
+        }
+    }
+
+    public class Place_JSON {
+         //Receives a JSONObject and returns a list
+
+        public List<HashMap<String, String>> parse(JSONObject jObject) {
+
+            JSONArray jPlaces = null;
+            try {
+                // Retrieves all the elements in the 'places' array */
+                jPlaces = jObject.getJSONArray("results");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            // Invoking getPlaces with the array of json object where each json object represent a place
+            return getPlaces(jPlaces);
+        }
+
+        private List<HashMap<String, String>> getPlaces(JSONArray jPlaces) {
+            int placesCount = jPlaces.length();
+            List<HashMap<String, String>> placesList = new ArrayList<HashMap<String, String>>();
+            HashMap<String, String> place = null;
+
+            // Taking each place, parses and adds to list object */
+            for (int i = 0; i < placesCount; i++) {
+                try {
+                    // Call getPlace with place JSON object to parse the place */
+                    place = getPlace((JSONObject) jPlaces.get(i));
+                    placesList.add(place);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            return placesList;
+        }
+
+
+         // Parsing the Place JSON object
+        private HashMap<String, String> getPlace(JSONObject jPlace) {
+
+            HashMap<String, String> place = new HashMap<String, String>();
+            String placeName = "-NA-";
+            String nearby = "-NA-";
+            String latitude = "";
+            String longitude = "";
+            String reference = "";
+
+            try {
+                // Extracting Place name, if available
+                if (!jPlace.isNull("name")) {
+                    placeName = jPlace.getString("name");
+                }
+
+                // Extracting the Places Nearby, if available
+                if (!jPlace.isNull("nearby")) {
+                    nearby = jPlace.getString("nearby");
+                }
+
+                latitude = jPlace.getJSONObject("geometry").getJSONObject("location").getString("lat");
+                longitude = jPlace.getJSONObject("geometry").getJSONObject("location").getString("lng");
+                reference = jPlace.getString("reference");
+
+                place.put("place_name", placeName);
+                place.put("nearby", nearby);
+                place.put("lat", latitude);
+                place.put("lng", longitude);
+                place.put("reference", reference);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return place;
+        }
     }
 }
 
