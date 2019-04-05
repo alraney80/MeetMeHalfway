@@ -340,7 +340,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             LatLngBounds bounds = builder.build();
             int width = getResources().getDisplayMetrics().widthPixels;
             int height = getResources().getDisplayMetrics().heightPixels;
-            int padding = (int) (width * 0.3); // offset from edges of the map 10% of screen
+            int padding = (int) (width * 0.4); // offset from edges of the map 10% of screen
             CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
             mMap.animateCamera(cu);
             //End Zoom Code
@@ -599,17 +599,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Log.d("Map", "place: " + name);
 
                 // Getting vicinity
-                String nearby = hmPlace.get("nearby");
+                String vicinity = hmPlace.get("vicinity");
 
                 LatLng latLng = new LatLng(lat, lng);
 
                 // Setting the position for the marker
                 markerOptions.position(latLng);
                 //pn1 = new MarkerOptions().position(latLng);
-                //mMap.addMarker(pn1.title(name + " : " + nearby));
+                //mMap.addMarker(pn1.title(name + " : " + vicinity));
 
 
-                markerOptions.title(name + " : " + nearby); //OG
+                markerOptions.title(name + " : " + vicinity); //OG
 
                 markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
 
@@ -660,10 +660,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             HashMap<String, String> place = new HashMap<String, String>();
             String placeName = "-NA-";
-            String nearby = "-NA-";
+            String vicinity = "-NA-";
             String latitude = "";
             String longitude = "";
             String reference = "";
+            //String placeAddress = "-NA-"
 
             try {
                 // Extracting Place name, if available
@@ -672,8 +673,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
 
                 // Extracting the Places Nearby, if available
-                if (!jPlace.isNull("nearby")) {
-                    nearby = jPlace.getString("nearby");
+                if (!jPlace.isNull("vicinity")) {
+                    vicinity = jPlace.getString("vicinity");
                 }
 
                 latitude = jPlace.getJSONObject("geometry").getJSONObject("location").getString("lat");
@@ -681,7 +682,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 reference = jPlace.getString("reference");
 
                 place.put("place_name", placeName);
-                place.put("nearby", nearby);
+                place.put("vicinity", vicinity);
                 place.put("lat", latitude);
                 place.put("lng", longitude);
                 place.put("reference", reference);
