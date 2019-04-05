@@ -80,6 +80,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         if(circle != null) {
             circle.remove();
+        } else {
+            radius = 1;
         }
 
         SupportMapFragment mapFragment =

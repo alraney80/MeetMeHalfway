@@ -2,109 +2,86 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinatorLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#707070"
-    tools:context=".LandingPage"
-    android:id="@+id/coordinatorLayout">
+    android:background="@color/place_autocomplete_search_hint"
+    tools:context=".LandingPage">
 
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="8dp"
-        android:background="@color/colorTeal"
-        android:lineSpacingExtra="8sp"
-        android:paddingStart="48dp"
-        android:paddingLeft="48dp"
-        android:paddingTop="24dp"
-        android:paddingEnd="48dp"
-        android:paddingRight="48dp"
-        android:paddingBottom="24dp"
-        android:text="@string/app_name"
-        android:textAlignment="center"
-        android:textColor="@color/colorWhite"
-        android:textSize="36sp"
-        android:textStyle="bold"
+    <ImageView
+        android:id="@+id/main_app_title"
+        android:layout_width="642dp"
+        android:layout_height="202dp"
+        android:background="@color/colorLightGray"
+        android:fadingEdge="none"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_app_title" />
 
     <fragment
         android:id="@+id/autocomplete_frag_address1"
         android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="336dp"
+        android:layout_height="44dp"
         app:layout_constraintBottom_toTopOf="@+id/AddrTwoResult"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.52"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/main_app_title"
+        app:layout_constraintVertical_bias="0.615" />
 
     <TextView
         android:id="@+id/AddrOneResult"
         android:layout_width="339dp"
         android:layout_height="52dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="64dp"
         android:background="#F4F4F6"
         android:text="@string/addr_one"
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/AddrTwoResult"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title" />
+        app:layout_constraintTop_toBottomOf="@+id/main_app_title" />
 
     <fragment
         android:id="@+id/autocomplete_frag_address2"
         android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/radius_spinner"
+        android:layout_width="338dp"
+        android:layout_height="48dp"
+        app:layout_constraintBottom_toTopOf="@+id/enterButton"
+        app:layout_constraintHorizontal_bias="0.479"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/AddrOneResult" />
+        app:layout_constraintTop_toBottomOf="@+id/AddrOneResult"
+        app:layout_constraintVertical_bias="0.32" />
 
 
     <TextView
         android:id="@+id/AddrTwoResult"
         android:layout_width="339dp"
         android:layout_height="52dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="32dp"
         android:background="#F4F4F6"
         android:text="@string/addr_two"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@+id/radius_spinner"
+        app:layout_constraintBottom_toTopOf="@+id/enterButton"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/AddrOneResult" />
 
-    <!--<Spinner-->
-        <!--android:id="@+id/radius_spinner"-->
-        <!--android:layout_width="292dp"-->
-        <!--android:layout_height="51dp"-->
-        <!--android:layout_marginStart="8dp"-->
-        <!--android:layout_marginTop="24dp"-->
-        <!--android:layout_marginEnd="8dp"-->
-        <!--android:background="#F4F4F6"-->
-        <!--android:dropDownWidth="match_parent"-->
-        <!--android:entries="@array/radius_array"-->
-        <!--android:paddingStart="8dp"-->
-        <!--android:spinnerMode="dropdown"-->
-        <!--app:layout_constraintEnd_toEndOf="parent"-->
-        <!--app:layout_constraintStart_toStartOf="parent"-->
-        <!--app:layout_constraintTop_toBottomOf="@+id/AddrTwoResult" />-->
-
     <Button
         android:id="@+id/enterButton"
-        android:layout_width="181dp"
-        android:layout_height="41dp"
+        android:layout_width="231dp"
+        android:layout_height="46dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="64dp"
         android:layout_marginEnd="8dp"
-        android:background="#3ACCE1"
+        android:background="@color/colorLightGray"
         android:text="@string/button_enter"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/colorDarkGray"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
