@@ -1,5 +1,6 @@
 package com.example.meetmehalfway;
 
+
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -10,7 +11,7 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
-public class SettingsActivity extends AppCompatPreferenceActivity {
+public class MapsOptionsActivity extends AppCompatPreferenceActivity {
 
     /**
      * A preference value change listener that updates the preference's summary
@@ -77,15 +78,15 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         super.onCreate(savedInstanceState);
         setupActionBar();
 
-        addPreferencesFromResource(R.xml.pref_general);
-//            setHasOptionsMenu(true);
-//
-//            // Bind the summaries of EditText/List/Dialog/Ringtone preferences
-//            // to their values. When their values change, their summaries are
-//            // updated to reflect the new value, per the Android Design
-//            // guidelines.
-            bindPreferenceSummaryToValue(findPreference("example_text"));
-            bindPreferenceSummaryToValue(findPreference("example_list"));
+        addPreferencesFromResource(R.xml.pref_data_sync);
+        //setHasOptionsMenu(true);
+
+        // Bind the summaries of EditText/List/Dialog/Ringtone preferences
+        // to their values. When their values change, their summaries are
+        // updated to reflect the new value, per the Android Design
+        // guidelines.
+        bindPreferenceSummaryToValue(findPreference("radius_key"));
+        bindPreferenceSummaryToValue(findPreference("place_type_key"));
     }
 
     /**

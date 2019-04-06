@@ -53,4 +53,6 @@ dependencies {
 }
 dependencies {
     compile 'com.google.maps.android:android-maps-utils:0.5+'
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
 }

@@ -6,12 +6,12 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
+import android.view.Menu;
+import android.view.MenuItem;
 
-import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -42,7 +42,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
     private LatLng addr1;
     private LatLng addr2;
     public LatLng center;
@@ -51,39 +51,76 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     MarkerOptions place1, place2;
     ArrayList markerPoints= new ArrayList();
     Circle circle;
+    String locationType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
+        Toolbar toolbar = findViewById(R.id.map_toolbar);
+        //toolbar.inflateMenu(R.menu.toolbar_menu);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("Meet Me halfway");
+
         addr1 = getIntent().getParcelableExtra("Addr1LatLng");
         addr2 = getIntent().getParcelableExtra("Addr2LatLng");
+        radius = 1;
+    }
 
-        //To open settings page
-        FloatingActionButton fab = findViewById(R.id.settingsButton);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+    //This is where the radius gets updated
+    public void updateRadius(SharedPreferences prefs) {
+        String radiusPref = prefs.getString("radius_key", "1");
+        radius = Integer.parseInt(radiusPref);
+        if(circle != null) {
+            circle.remove();
+        } else {
+            radius = 1;
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putString("radius_key", "1");
+            editor.apply();
+        }
+    }
+
+    //This is where the location type gets updated
+    public void updateLocationType(SharedPreferences prefs) {
+        locationType = prefs.getString("place_type_key", "restaurant");
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        switch(item.getItemId()) {
+            case R.id.action_settings:
                 Intent modifySettings=new Intent(MapsActivity.this,SettingsActivity.class);
                 startActivity(modifySettings);
-            }
-        });
+                return true;
+
+            case R.id.map_options:
+                Intent modifyMapOptions=new Intent(MapsActivity.this,MapsOptionsActivity.class);
+                startActivity(modifyMapOptions);
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String radiusPref;
-        radiusPref = prefs.getString("radius_key", "1");
-        radius = Integer.parseInt(radiusPref);
 
-        if(circle != null) {
-            circle.remove();
-        } else {
-            radius = 1;
-        }
+        updateRadius(prefs);
 
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);

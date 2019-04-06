@@ -1,24 +1,21 @@
 <!-- These are preferences for map options -->
 
-<PreferenceScreen
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <EditTextPreference
+        android:defaultValue="1"
         android:key="radius_key"
-        android:title="Enter radius (miles): " />
+        android:title="Enter radius (miles) " />
 
-    <!--<ListPreference-->
-        <!--android:defaultValue="0"-->
-        <!--android:entries="@array/pref_map_radius_titles"-->
-        <!--android:entryValues="@array/pref_map_radius_values"-->
-        <!--android:key="radius_key"-->
-        <!--android:negativeButtonText="@null"-->
-        <!--android:positiveButtonText="@null"-->
-        <!--android:title="@string/pref_title_map_radius" />-->
+    <EditTextPreference
+        android:key="place_type_key"
+        android:singleLineTitle="false"
+        android:title="Enter a Location Type (restaurant, convenience store, supermarket, etc)" />
 
     <SwitchPreference
         android:defaultValue="false"
-        android:key="safe_places"
+        android:key="safe_places_key"
         android:summary="@string/pref_description_loc_type"
         android:title="@string/pref_title_loc_type" />
 
