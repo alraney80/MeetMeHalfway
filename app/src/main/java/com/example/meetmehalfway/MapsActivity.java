@@ -121,6 +121,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         updateRadius(prefs);
+        updateLocationType(prefs);
 
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
