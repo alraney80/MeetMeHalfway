@@ -97,13 +97,16 @@ public class LandingPage extends AppCompatActivity {
 
     public void OpenMapsActivity(LatLng Addr1LatLng, LatLng Addr2LatLng) {
         //convert radius (string) to int
-        Intent intent = new Intent(this, MapsActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putParcelable("Addr1LatLng", Addr1LatLng);
-        bundle.putParcelable("Addr2LatLng", Addr2LatLng);
-        intent.putExtras(bundle);
-        if(intent.resolveActivity(getPackageManager()) != null) {
-            startActivity(intent);
+        if (Addr2LatLng != null && Addr1LatLng != null) {
+            Intent intent = new Intent(this, MapsActivity.class);
+
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("Addr1LatLng", Addr1LatLng);
+            bundle.putParcelable("Addr2LatLng", Addr2LatLng);
+            intent.putExtras(bundle);
+            if (intent.resolveActivity(getPackageManager()) != null) {
+                startActivity(intent);
+            }
         }
     }
 }
