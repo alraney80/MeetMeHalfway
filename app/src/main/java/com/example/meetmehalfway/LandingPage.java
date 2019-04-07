@@ -1,19 +1,21 @@
 package com.example.meetmehalfway;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
-import com.google.android.gms.common.api.Status;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
-
 
 import java.util.Arrays;
 
@@ -25,16 +27,11 @@ public class LandingPage extends AppCompatActivity {
     TextView addr2Result;
     LatLng addr1LatLng;
     LatLng addr2LatLng;
-    String selectedRadius;
-    int finalRadius;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing_page);
-
-//        addr1Result = this.findViewById(R.id.AddrOneResult);
-//        addr2Result = this.findViewById(R.id.AddrTwoResult);
 
         /*
          * Initialize Places.
@@ -90,16 +87,43 @@ public class LandingPage extends AppCompatActivity {
         enterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                OpenMapsActivity(addr1LatLng, addr2LatLng);
+                if(addr1LatLng != null && addr2LatLng != null) {
+                    OpenMapsActivity(addr1LatLng, addr2LatLng);
+                } else if (addr1LatLng == null){
+                    address1Error(LandingPage.this);
+                } else {
+                    address2Error(LandingPage.this);
+                }
             }
         });
+    }
+
+    private void address1Error(Context context) {
+        final EditText fixAddress = new EditText(context);
+        AlertDialog message = new AlertDialog.Builder(context)
+                .setTitle("Invalid Address")
+                .setMessage("Please enter a valid address for Address 1.")
+                .setView(fixAddress)
+                .setPositiveButton("OK", null)
+                .create();
+        message.show();
+    }
+
+    private void address2Error(Context context) {
+        final EditText fixAddress = new EditText(context);
+        AlertDialog message = new AlertDialog.Builder(context)
+                .setTitle("Invalid Address")
+                .setMessage("Please enter a valid address for Address 2.")
+                .setView(fixAddress)
+                .setPositiveButton("OK", null)
+                .create();
+        message.show();
     }
 
     public void OpenMapsActivity(LatLng Addr1LatLng, LatLng Addr2LatLng) {
         //convert radius (string) to int
         if (Addr2LatLng != null && Addr1LatLng != null) {
             Intent intent = new Intent(this, MapsActivity.class);
-
             Bundle bundle = new Bundle();
             bundle.putParcelable("Addr1LatLng", Addr1LatLng);
             bundle.putParcelable("Addr2LatLng", Addr2LatLng);
