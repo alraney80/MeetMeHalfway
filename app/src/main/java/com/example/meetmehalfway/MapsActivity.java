@@ -45,9 +45,9 @@ import java.util.HashMap;
 import java.util.List;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
-    private LatLng addr1;
-    private LatLng addr2;
-    public LatLng center;
+    public static LatLng addr1;
+    public static LatLng addr2;
+    public static LatLng center;
     public int radius;
     private GoogleMap mMap;
     MarkerOptions place1, place2;
@@ -76,11 +76,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         radius = Integer.parseInt(radiusPref);
         if(circle != null) {
             circle.remove();
+            mMap.clear();
         } else {
+
             radius = 1;
             SharedPreferences.Editor editor = prefs.edit();
             editor.putString("radius_key", "1");
             editor.apply();
+
+
         }
     }
 
