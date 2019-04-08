@@ -11,6 +11,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -110,11 +112,28 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 startActivity(modifyMapOptions);
                 return true;
 
+            case R.id.action_home:
+                Button homeButton;
+            homeButton = findViewById(R.id.action_home);
+            homeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    OpenLandingActivity();
+                }
+            });
+
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
-
+    public void OpenLandingActivity() {
+        Intent intent = new Intent(this, LandingPage.class);
+        Bundle bundle = new Bundle();
+        intent.putExtras(bundle);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
+    }
     @Override
     public void onResume() {
         super.onResume();
