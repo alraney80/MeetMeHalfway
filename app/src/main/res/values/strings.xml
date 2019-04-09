@@ -43,6 +43,68 @@
     <string name="pref_key_safe_places">safe_places_only</string>
 
 
+    <string-array name="pref_location_values">
+        <item>any</item>
+        <item>airport</item>
+        <item>amusement_park</item>
+        <item>aquarium</item>
+        <item>atm</item>
+        <item>bank</item>
+        <item>bar</item>
+        <item>bowling_alley</item>
+        <item>casino</item>
+        <item>city_hall</item>
+        <item>fire_station</item>
+        <item>gas_station</item>
+        <item>gym</item>
+        <item>library</item>
+        <item>lodging</item>
+        <item>movie_theater</item>
+        <item>museum</item>
+        <item>night_club</item>
+        <item>park</item>
+        <item>police</item>
+        <item>post_office</item>
+        <item>restaurant</item>
+        <item>rv_park</item>
+        <item>shopping_mall</item>
+        <item>spa</item>
+        <item>store</item>
+        <item>Supermarket</item>
+        <item>zoo</item>
+     </string-array>
+
+    <string-array name="pref_location_titles">
+        <item>Any</item>
+        <item>Airport</item>
+        <item>Amusement Park</item>
+        <item>Aquarium</item>
+        <item>ATM</item>
+        <item>Bank</item>
+        <item>Bar</item>
+        <item>Bowling Alley</item>
+        <item>Casino</item>
+        <item>City Hall</item>
+        <item>Fire Station</item>
+        <item>Gas Station</item>
+        <item>Gym</item>
+        <item>Library</item>
+        <item>Lodging</item>
+        <item>Movie Theater</item>
+        <item>Museum</item>
+        <item>Night Club</item>
+        <item>Park</item>
+        <item>Police Station</item>
+        <item>Post Office</item>
+        <item>Restaurant</item>
+        <item>RV Park</item>
+        <item>Shopping Mall</item>
+        <item>Spa</item>
+        <item>Store</item>
+        <item>Supermarket</item>
+        <item>Zoo</item>
+    </string-array>
+
     <!-- User Settings strings -->
     <string name="pref_header_user_settings">Settings</string>
 

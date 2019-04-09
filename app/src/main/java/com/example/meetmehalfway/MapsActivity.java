@@ -41,8 +41,10 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
     public static LatLng addr1;
@@ -54,6 +56,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     ArrayList markerPoints= new ArrayList();
     Circle circle;
     String locationType;
+    boolean safeLocations;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,14 +87,38 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             editor.putString("radius_key", "1");
             editor.apply();
 
-
         }
+    }
+    public void safeLocationsOnly(SharedPreferences prefs) {
+        safeLocations = prefs.getBoolean("safe_places_key", false);
+        //String safe = prefs.getString("safe_places_key", "false");
+        //Log.d("Safe: ", safe);
     }
 
     //This is where the location type gets updated
+    Boolean goodToGo = false;
     public void updateLocationType(SharedPreferences prefs) {
         locationType = prefs.getString("place_type_key", "restaurant");
+//        EnumSet.allOf(PlaceType.type.class)
+//                .forEach(new Consumer<PlaceType.type>() {
+//                    @Override
+//                    public void accept(PlaceType.type type) {
+//                        if (locationType == type.toString()) {
+//                            goodToGo = true;
+//                        }
+//                    }
+//                });
+//        if (goodToGo != true )
+//        {
+//            locationType = "restaurant";
+//        }
+        if (safeLocations)
+        {
+            locationType = "police";
+        }
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
@@ -144,7 +171,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         updateRadius(prefs);
+        safeLocationsOnly(prefs);
         updateLocationType(prefs);
+
 
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -408,13 +437,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             mMap.animateCamera(cu);
             //End Zoom Code
 
-            String type = "restaurant";
-
-            StringBuilder pnValue = new StringBuilder(pnMethod(center, radius, type));
+            StringBuilder pnValue = new StringBuilder(pnMethod(center, radius, locationType));
             PlacesTask placesTask = new PlacesTask();
             placesTask.execute(pnValue.toString()); //OG
-
-
 
         }
     }
@@ -548,7 +573,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
-    public StringBuilder pnMethod(LatLng cent, int rad, String type) {
+    public StringBuilder pnMethod(LatLng cent, int rad, String locationType) {
 
         //use the halfway point location here, currently its just a California location.
         //double mLatitude = 33.241586533325226; //OG
@@ -562,7 +587,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         pn.append("location=" + cent.latitude + "," + cent.longitude);
 
         pn.append("&radius=" +(rad*1609));
-        pn.append("&types=" + type);
+       if (locationType != "") {
+           pn.append("&types=" + locationType);
+       }
+       else {
+           pn.append("");
+       }
         //pn.append("&types=" + "restaurant");
         pn.append("&sensor=true");
         //Key value = AlzaSyBguDOBAg_Zi2K5DAFRO83idl4ucvNhyGo
