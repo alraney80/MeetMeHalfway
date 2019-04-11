@@ -39,7 +39,7 @@
         <item>50</item>
     </string-array>
     <string name="pref_title_loc_type"> Or Choose Safe Locations Only</string>
-    <string name="pref_description_loc_type">Results will display only safe locations (police stations, fire departments, public libraries, etc</string>
+    <string name="pref_description_loc_type">Results will display only safe locations (police stations)</string>
     <string name="pref_key_safe_places">safe_places_only</string>
 
 
@@ -70,7 +70,7 @@
         <item>shopping_mall</item>
         <item>spa</item>
         <item>store</item>
-        <item>Supermarket</item>
+        <item>supermarket</item>
         <item>zoo</item>
      </string-array>
 

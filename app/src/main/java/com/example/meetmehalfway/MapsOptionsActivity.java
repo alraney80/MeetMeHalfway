@@ -32,7 +32,7 @@ public class MapsOptionsActivity extends AppCompatPreferenceActivity {
                 // Set the summary to reflect the new value.
                 preference.setSummary(
                         index >= 0
-                                ? listPreference.getEntries()[index]
+                                ? listPreference.getEntryValues()[index]
                                 : null);
 
             } else {

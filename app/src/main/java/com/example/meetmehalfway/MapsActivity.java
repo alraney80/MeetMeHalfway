@@ -41,10 +41,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
-import java.util.function.Consumer;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
     public static LatLng addr1;
@@ -91,8 +89,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
     public void safeLocationsOnly(SharedPreferences prefs) {
         safeLocations = prefs.getBoolean("safe_places_key", false);
-        //String safe = prefs.getString("safe_places_key", "false");
-        //Log.d("Safe: ", safe);
     }
 
     //This is where the location type gets updated
@@ -173,7 +169,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         updateRadius(prefs);
         safeLocationsOnly(prefs);
         updateLocationType(prefs);
-
 
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
