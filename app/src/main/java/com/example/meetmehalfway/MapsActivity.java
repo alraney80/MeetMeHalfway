@@ -1,11 +1,13 @@
 package com.example.meetmehalfway;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -13,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -43,6 +46,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
     public static LatLng addr1;
@@ -74,47 +78,37 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     //This is where the radius gets updated
     public void updateRadius(SharedPreferences prefs) {
         String radiusPref = prefs.getString("radius_key", "1");
-        radius = Integer.parseInt(radiusPref);
+
         if(circle != null) {
             circle.remove();
             mMap.clear();
+            // if radius is valid, try will execute
+            try {
+                radius = Integer.parseInt(radiusPref);
+            }
+            // if the radius is not valid, the catch will execute.
+            catch (NumberFormatException e) {
+                radiusError(MapsActivity.this);
+                radius = 1;
+            }
         } else {
-
             radius = 1;
             SharedPreferences.Editor editor = prefs.edit();
             editor.putString("radius_key", "1");
             editor.apply();
-
         }
     }
+
     public void safeLocationsOnly(SharedPreferences prefs) {
         safeLocations = prefs.getBoolean("safe_places_key", false);
     }
 
-    //This is where the location type gets updated
-    Boolean goodToGo = false;
     public void updateLocationType(SharedPreferences prefs) {
         locationType = prefs.getString("place_type_key", "restaurant");
-//        EnumSet.allOf(PlaceType.type.class)
-//                .forEach(new Consumer<PlaceType.type>() {
-//                    @Override
-//                    public void accept(PlaceType.type type) {
-//                        if (locationType == type.toString()) {
-//                            goodToGo = true;
-//                        }
-//                    }
-//                });
-//        if (goodToGo != true )
-//        {
-//            locationType = "restaurant";
-//        }
-        if (safeLocations)
-        {
+        if (safeLocations) {
             locationType = "police";
         }
     }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
@@ -179,7 +173,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onPause() {
         super.onPause();
     }
-
     /**
      * Called when the map is ready.
      */
@@ -196,19 +189,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         markerPoints.add(addr2);
 
         String url = getDirectionsUrl(place1.getPosition(), place2.getPosition());
-
         FetchUrl fetchUrl = new FetchUrl();
-
         // Start downloading json data from Google Directions API
         fetchUrl.execute(url);
-
     }
 
     private class FetchUrl extends AsyncTask<String, Void, String> {
-
         @Override
         protected String doInBackground(String... url) {
-
             // For storing data from web service
             String data = "";
 
@@ -225,43 +213,34 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-
             ParserTask parserTask = new ParserTask();
-
             // Invokes the thread for parsing the JSON data
             parserTask.execute(result);
 
         }
     }
+
     private String downloadUrl(String strUrl) throws IOException {
         String data = "";
         InputStream iStream = null;
         HttpURLConnection urlConnection = null;
         try {
             URL url = new URL(strUrl);
-
             // Creating an http connection to communicate with url
             urlConnection = (HttpURLConnection) url.openConnection();
-
             // Connecting to url
             urlConnection.connect();
-
             // Reading data from url
             iStream = urlConnection.getInputStream();
-
             BufferedReader br = new BufferedReader(new InputStreamReader(iStream));
-
             StringBuffer sb = new StringBuffer();
-
             String line = "";
             while ((line = br.readLine()) != null) {
                 sb.append(line);
             }
-
             data = sb.toString();
             Log.d("downloadUrl", data.toString());
             br.close();
-
         } catch (Exception e) {
             Log.d("Exception", e.toString());
         } finally {
@@ -270,6 +249,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         return data;
     }
+
     public String getDirectionsUrl(LatLng origin, LatLng dest) {
         String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
         String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
@@ -278,12 +258,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         String url = "https://maps.googleapis.com/maps/api/directions/json?"
                 + parameters + "&key=" + getString(R.string.google_maps_key);
         return url;
-
-
-        // https://maps.googleapis.com/maps/api/directions/json?origin=33.2534746,-97.1539148&destination=33.23599679999999,-96.7148&mode=driving&key=AIzaSyBguDOBAg_Zi2K5DAFRO83idl4ucvNhyGo
     }
-    private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
 
+    private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
         // Parsing the data in non-ui thread
         @Override
         protected List<List<HashMap<String, String>>> doInBackground(String... jsonData) {
@@ -382,14 +359,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                     points.add(position);
                 }
-
                 // Adding all the points in the route to LineOptions
                 lineOptions.addAll(points);
                 lineOptions.width(10);
                 lineOptions.color(Color.RED);
 
                 Log.d("onPostExecute","onPostExecute lineoptions decoded");
-
             }
 
             // Drawing polyline in the Google Map for the i-th route
@@ -404,9 +379,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             center = extrapolate(lineOptions.getPoints(), lineOptions.getPoints().get(0), (middleDistance/2));
 
-            //Log.d("onPostExecute","without Polylines drawn");
-            //Log.d("latitude = "+ center.latitude, "longitude = "+ center.longitude);
-
             mMap.addMarker(new MarkerOptions().position(center).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
             CameraPosition cameraPosition = new CameraPosition.Builder()
                     .target(center)
@@ -418,19 +390,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     .radius(radius*1609.34)
                     .strokeColor(Color.BLUE));
 
-            //This zooms in the map so that you only see the two addresses instead of the world view.
-            LatLngBounds.Builder builder = new LatLngBounds.Builder();
-            //the include method will calculate the min and max bound.
-            builder.include(place1.getPosition());
-            builder.include(place2.getPosition());
-            builder.include(center);
-            LatLngBounds bounds = builder.build();
-            int width = getResources().getDisplayMetrics().widthPixels;
-            int height = getResources().getDisplayMetrics().heightPixels;
-            int padding = (int) (width * 0.4); // offset from edges of the map 10% of screen
-            CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, width, height, padding);
-            mMap.animateCamera(cu);
-            //End Zoom Code
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                    center, getZoomLevel(circle)));
 
             StringBuilder pnValue = new StringBuilder(pnMethod(center, radius, locationType));
             PlacesTask placesTask = new PlacesTask();
@@ -438,6 +399,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         }
     }
+
     class DataParser {
 
         List<List<HashMap<String,String>>> parse(JSONObject jObject){
@@ -482,11 +444,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 e.printStackTrace();
             }catch (Exception e){
             }
-
-
             return routes;
         }
-
 
         /**
          * Method to decode polyline points
@@ -557,7 +516,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             Log.d("onPostExecute","onPostExecute lineoptions decoded");
 
         }
-
         // Drawing polyline in the Google Map for the i-th route
         if(lineOptions != null) {
             mMap.addPolyline(lineOptions);
@@ -565,17 +523,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         else {
             Log.d("onPostExecute","without Polylines drawn");
         }
-
     }
 
     public StringBuilder pnMethod(LatLng cent, int rad, String locationType) {
-
-        //use the halfway point location here, currently its just a California location.
-        //double mLatitude = 33.241586533325226; //OG
-        //double mLongitude = -97.17666; //OG
-
-        //double mLatitude = center.latitude;
-        //double mLongitude = center.longitude;
         Log.d("latitude = "+ cent.latitude, "longitude = "+ cent.longitude);
 
         StringBuilder pn = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
@@ -588,7 +538,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
        else {
            pn.append("");
        }
-        //pn.append("&types=" + "restaurant");
         pn.append("&sensor=true");
         //Key value = AlzaSyBguDOBAg_Zi2K5DAFRO83idl4ucvNhyGo
         pn.append("&key=" + getString(R.string.google_maps_key));
@@ -599,9 +548,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private class PlacesTask extends AsyncTask<String, Integer, String> {
-
-        //String data = null;
-
         // Invoked by execute() method of this object
         @Override
         protected String doInBackground(String... url) {
@@ -619,9 +565,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-
             ParsingNearby parseNearby = new ParsingNearby();
-
             // Start parsing the Google places in JSON format
             // Invokes the "doInBackground()" method of the class ParserTask
             parseNearby.execute(result);
@@ -629,9 +573,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private class ParsingNearby extends AsyncTask<String, Integer, List<HashMap<String, String>>> {
-
-        //JSONObject jObject; //OG
-
         // Invoked by execute() method of this object
         @Override
         protected List<HashMap<String, String>> doInBackground(String... jsonData) {
@@ -639,7 +580,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             JSONObject jObject;
             MarkerOptions pn1;
             List<HashMap<String, String>> places = null;
-            //Place_JSON placeJson = new Place_JSON(); //OG
 
             try {
                 jObject = new JSONObject(jsonData[0]);
@@ -663,54 +603,39 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         protected void onPostExecute(List<HashMap<String, String>> list) {
 
             Log.d("Map", "list size: " + list.size());
-            // Clears all the existing markers;
-            //mMap.clear();
 
-            for (int i = 0; i < list.size(); i++) {
-
+                for (int i = 0; i < list.size(); i++) {
                 // Creating a marker
                 MarkerOptions markerOptions = new MarkerOptions();
-
                 // Getting a place from the places list
                 HashMap<String, String> hmPlace = list.get(i);
-
-
                 // Getting latitude of the place
                 double lat = Double.parseDouble(hmPlace.get("lat"));
-
                 // Getting longitude of the place
                 double lng = Double.parseDouble(hmPlace.get("lng"));
-
                 // Getting name
                 String name = hmPlace.get("place_name");
-
                 Log.d("Map", "place: " + name);
-
                 // Getting vicinity
                 String vicinity = hmPlace.get("vicinity");
-
                 LatLng latLng = new LatLng(lat, lng);
-
                 // Setting the position for the marker
+                    if (!name.equals(vicinity)) {
+                        Log.d("Name: " , name);
+                        Log.d("Vicinity" , vicinity);
+
                 markerOptions.position(latLng);
-                //pn1 = new MarkerOptions().position(latLng);
-                //mMap.addMarker(pn1.title(name + " : " + vicinity));
-
-
                 markerOptions.title(name + " : " + vicinity); //OG
-
                 markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
-
-                // Placing a marker on the touched position
-                mMap.addMarker(markerOptions);
-
+                    // Placing a marker on the touched position
+                    mMap.addMarker(markerOptions);
+                }
             }
         }
     }
 
     public class Place_JSON {
         //Receives a JSONObject and returns a list
-
         public List<HashMap<String, String>> parse(JSONObject jObject) {
 
             JSONArray jPlaces = null;
@@ -741,7 +666,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
             return placesList;
         }
-
 
         // Parsing the Place JSON object
         private HashMap<String, String> getPlace(JSONObject jPlace) {
@@ -780,6 +704,27 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
             return place;
         }
+    }
+
+    public int getZoomLevel(Circle circle) {
+        int zoomLevel = 11;
+        if (circle != null) {
+            double radius = circle.getRadius() + circle.getRadius() / 2;
+            double scale = radius / 500;
+            zoomLevel = (int) (16 - Math.log(scale) / Math.log(2));
+        }
+        return zoomLevel;
+    }
+
+    private void radiusError (Context context) {
+        final EditText fixRadius = new EditText(context);
+        AlertDialog message = new AlertDialog.Builder(context)
+                .setTitle("Invalid Radius")
+                .setMessage("Please enter a valid Radius")
+                .setView(fixRadius)
+                .setPositiveButton("OK", null)
+                .create();
+        message.show();
     }
 }
 
