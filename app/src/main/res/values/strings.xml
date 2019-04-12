@@ -6,14 +6,6 @@
     <string name="addr_two">Enter Address 2</string>
     <string name="button_enter">Continue</string>
     <string name="title">Meet Me Halfway</string>
-    <string-array name="radius_array">
-        <item>Choose Radius (miles)</item>
-        <item>1</item>
-        <item>5</item>
-        <item>10</item>
-        <item>25</item>
-        <item>50</item>
-    </string-array>
     <string-array name ="empty_array">
     </string-array>
     <string name="title_activity_settings">Settings</string>
@@ -38,7 +30,7 @@
         <item>25</item>
         <item>50</item>
     </string-array>
-    <string name="pref_title_loc_type"> Or Choose Safe Locations Only</string>
+    <string name="pref_title_loc_type">Choose Safe Locations Only</string>
     <string name="pref_description_loc_type">Results will display only safe locations (police stations)</string>
     <string name="pref_key_safe_places">safe_places_only</string>
 

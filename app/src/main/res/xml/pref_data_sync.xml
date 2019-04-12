@@ -3,6 +3,13 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <!--<SeekBarPreference-->
+        <!--android:key="radius_key"-->
+        <!--android:title="Choose Radius (miles)"-->
+        <!--android:max="50"-->
+        <!--app:showSeekBarValue="true"-->
+        <!--android:defaultValue="1" />-->
+
     <EditTextPreference
         android:defaultValue="1"
         android:key="radius_key"
@@ -12,11 +19,12 @@
         android:key="place_type_key"
         android:title="Choose Location Type"
         android:entries="@array/pref_location_titles"
-        android:entryValues="@array/pref_location_values"/>
-    <!--android:singleLineTitle="false"-->
+        android:entryValues="@array/pref_location_values"
+        android:dependency="safe_places_key"/>
 
     <SwitchPreference
         android:defaultValue="false"
+        android:disableDependentsState="true"
         android:key="safe_places_key"
         android:summary="@string/pref_description_loc_type"
         android:title="@string/pref_title_loc_type" />
