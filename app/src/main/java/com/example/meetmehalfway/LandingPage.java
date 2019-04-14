@@ -49,7 +49,6 @@ public class LandingPage extends AppCompatActivity {
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
-                //addr1Result = findViewById(R.id.AddrOneResult);
                 addr1Result.setText(place.getName());
                 addr1LatLng = place.getLatLng();
             }
@@ -71,7 +70,6 @@ public class LandingPage extends AppCompatActivity {
         autocompleteFragment2.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
-                //addr2Result = findViewById(R.id.AddrTwoResult);
                 addr2Result.setText(place.getName());
                 addr2LatLng = place.getLatLng();
             }

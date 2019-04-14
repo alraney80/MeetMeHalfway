@@ -1,19 +1,13 @@
 <!-- These are preferences for map options -->
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:key="options_key">
 
-    <!--<SeekBarPreference-->
-        <!--android:key="radius_key"-->
-        <!--android:title="Choose Radius (miles)"-->
-        <!--android:max="50"-->
-        <!--app:showSeekBarValue="true"-->
-        <!--android:defaultValue="1" />-->
 
     <EditTextPreference
         android:defaultValue="1"
         android:key="radius_key"
-        android:title="Enter Radius (miles) " />
+        android:title="Change Search Result Radius (miles) " />
 
     <ListPreference
         android:key="place_type_key"

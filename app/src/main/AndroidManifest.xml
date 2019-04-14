@@ -17,14 +17,6 @@
         android:supportsRtl="false"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity
-            android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings"
-            android:parentActivityName=".MapsActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.meetmehalfway.MapsActivity" />
-        </activity>
-        <activity
             android:name=".MapsOptionsActivity"
             android:label="@string/title_activity_map_options"
             android:parentActivityName=".MapsActivity">

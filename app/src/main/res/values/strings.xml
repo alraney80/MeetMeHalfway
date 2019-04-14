@@ -31,7 +31,7 @@
         <item>50</item>
     </string-array>
     <string name="pref_title_loc_type">Choose Safe Locations Only</string>
-    <string name="pref_description_loc_type">Results will display only safe locations (police stations)</string>
+    <string name="pref_description_loc_type">Results will display only police stations.</string>
     <string name="pref_key_safe_places">safe_places_only</string>
 
 
@@ -149,4 +149,7 @@
         <item>-1</item>
     </string-array>
 
+    <string name="error_invalid_number">ERROR: Invalid Number</string>
+    <string name="about_title">About Us</string>
+    <string name="about_descr">To be entered later</string>
 </resources>

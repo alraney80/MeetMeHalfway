@@ -66,7 +66,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         setContentView(R.layout.activity_maps);
 
         Toolbar toolbar = findViewById(R.id.map_toolbar);
-        //toolbar.inflateMenu(R.menu.toolbar_menu);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Meet Me halfway");
 
@@ -123,14 +122,20 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         switch(item.getItemId()) {
-            case R.id.action_settings:
-                Intent modifySettings=new Intent(MapsActivity.this,SettingsActivity.class);
-                startActivity(modifySettings);
-                return true;
-
             case R.id.map_options:
                 Intent modifyMapOptions=new Intent(MapsActivity.this,MapsOptionsActivity.class);
                 startActivity(modifyMapOptions);
+                return true;
+
+            case R.id.action_about:
+                final EditText aboutUs = new EditText(this);
+                AlertDialog about = new AlertDialog.Builder(this)
+                        .setTitle(R.string.about_title)
+                        .setMessage(R.string.about_descr)
+                        .setView(aboutUs)
+                        .setPositiveButton("OK", null)
+                        .create();
+                about.show();
                 return true;
 
             case R.id.action_home:
