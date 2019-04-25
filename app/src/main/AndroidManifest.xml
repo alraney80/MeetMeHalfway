@@ -59,6 +59,15 @@
         <meta-data
             android:name="com.google.android.geo.Geocode_API_KEY"
             android:value="AIzaSyD3QZ9CGduWEiA5qIXEYh6imLFZ2eUTBCk" />
+
+
+
+        <uses-library android:name="android.test.runner"
+            android:required="false" />
+        <uses-library android:name="android.test.base"
+            android:required="false" />
+        <uses-library android:name="android.test.mock"
+            android:required="false" />
     </application>
 
 </manifest>
