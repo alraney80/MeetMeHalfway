@@ -1,12 +1,14 @@
 package com.example.meetmehalfway;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.preference.PreferenceScreen;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -47,6 +49,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
     public static LatLng addr1;
@@ -137,16 +140,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         .create();
                 about.show();
                 return true;
-
-            case R.id.action_home:
-                Button homeButton;
-            homeButton = findViewById(R.id.action_home);
-            homeButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    OpenLandingActivity();
-                }
-            });
 
             default:
                 return super.onOptionsItemSelected(item);
@@ -608,6 +601,28 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         protected void onPostExecute(List<HashMap<String, String>> list) {
 
             Log.d("Map", "list size: " + list.size());
+
+
+
+                if (list.size() <= 0)
+                {
+                    final EditText noMarkers = new EditText(MapsActivity.this);
+                    AlertDialog markers = new AlertDialog.Builder(MapsActivity.this)
+                            .setTitle("No Results")
+                            .setMessage("Please Enter A Larger Radius")
+                            .setView(noMarkers)
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Intent modifyMapOptions=new Intent(MapsActivity.this,MapsOptionsActivity.class);
+                                    startActivity(modifyMapOptions);
+                                }
+                            })
+                            .create();
+                    markers.show();
+
+                }
+
 
                 for (int i = 0; i < list.size(); i++) {
                 // Creating a marker
