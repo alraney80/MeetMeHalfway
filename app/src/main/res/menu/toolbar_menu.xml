@@ -4,12 +4,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_home"
-        android:icon="?attr/homeAsUpIndicator"
-        android:title="@string/title_button_back"
-        app:showAsAction="ifRoom" />
-
-    <item
         android:id="@+id/map_options"
         android:icon="@mipmap/ic_launcher"
         android:title="@string/pref_header_map_options"

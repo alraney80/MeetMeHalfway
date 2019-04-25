@@ -146,10 +146,10 @@
         <item>60</item>
         <item>180</item>
         <item>360</item>
-        <item>-1</item>
+        .
     </string-array>
 
     <string name="error_invalid_number">ERROR: Invalid Number</string>
-    <string name="about_title">About Us</string>
-    <string name="about_descr">To be entered later</string>
+    <string name="about_title">About MAARK-5</string>
+    <string name="about_descr">MAARK-5 is a group of students at the University of North Texas, College of Engineering, Computer Science Department. We came together as a group for our Software Development Capstone course. We decided as a team that our group would be well suited to create Meet Me Halfway. A fun fact about our group is that our name MAARK-5 comes from the first initials of all our names, and the fact that there are five teammates. We hope you enjoy our application. Team Members: Miranda Bigby, Abdullah Mumtaz, Amy Raney, Robin Rajan, Kaytlin Lafleur.</string>
 </resources>
